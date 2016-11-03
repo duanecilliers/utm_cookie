@@ -22,6 +22,8 @@ var utmCookie = {
 
   cookieExpiryDays: 365,
 
+  crossSubDomain: true,
+
   // From http://www.quirksmode.org/js/cookies.html
   createCookie: function(name, value, days) {
     if (days) {
@@ -30,7 +32,9 @@ var utmCookie = {
       var expires = "; expires="+date.toGMTString();
     }
     else var expires = "";
-    document.cookie = this.cookieNamePrefix + name+"="+value+expires+"; path=/";
+    var cookie = this.cookieNamePrefix + name+"="+value+expires+"; path=/"
+    cookie += this.crossSubDomain ? '; domain=.' + window.location.hostname.replace('www.', '') : '';
+    document.cookie = cookie;
   },
 
   readCookie: function(name) {
@@ -104,5 +108,6 @@ var utmCookie = {
 utmCookie.writeReferrerOnce();
 
 if (utmCookie.utmPresentInUrl()) {
+	console.log('writing cookies');
   utmCookie.writeUtmCookieFromParams();
 }
